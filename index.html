@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#05050d">
+<meta name="description" content="あなた宛ての手紙が届いています。">
+<meta property="og:title" content="UNMUTE to ACTION 招待状">
+<meta property="og:description" content="あなた宛ての手紙が届いています。">
+<meta property="og:type" content="website">
+<style>:root{color-scheme:dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font-size:14px}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>UNMUTE to ACTION 招待状</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Zen+Kurenaido&display=swap">
+<style>
+/* Layout: one-screen night sky. name entry -> paper plane crosses the sky -> envelope drops in -> letter card. Single dark look by choice. */
+:root {
+  --sky-top: #05050d;
+  --sky-bottom: #2a0a24;
+  --ink: #f6f2f8;
+  --ink-dim: #b9acc0;
+  --pink: #ff2e97;
+  --pink-soft: #ffc4e1;
+  --paper: #fbf5ee;
+  --paper-ink: #2b2230;
+  --font-ui: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  --font-en: "Chakra Petch", "Zen Kaku Gothic New", sans-serif;
+  --font-hand: "Zen Kurenaido", "Zen Kaku Gothic New", "Hiragino Maru Gothic ProN", sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--sky-top);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  line-height: 1.7;
+  overflow: hidden;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  -webkit-text-size-adjust: 100%;
+}
+#sky {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse at 80% 12%, rgba(255,46,151,.28), transparent 55%),
+    radial-gradient(ellipse at 10% 100%, rgba(255,46,151,.22), transparent 50%),
+    linear-gradient(180deg, var(--sky-top), var(--sky-bottom));
+}
+#stars { position: absolute; inset: 0; width: 100%; height: 100%; }
+.screen {
+  position: fixed; inset: 0; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: max(24px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  text-align: center;
+}
+.screen[hidden] { display: none; }
+.fade { animation: fadeIn .9s ease both; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* ---- 1. 名前入力 ---- */
+.eyebrow { font-family: var(--font-en); font-weight: 600; letter-spacing: .22em; font-size: 12px; color: var(--pink); margin: 0 0 14px; text-transform: uppercase; }
+.title { font-family: var(--font-en); font-weight: 600; font-size: clamp(28px, 8.4vw, 44px); line-height: 1.1; margin: 0 0 6px; white-space: nowrap; text-shadow: 0 0 28px rgba(255,46,151,.6); }
+.sub { margin: 0 0 40px; color: var(--pink-soft); font-weight: 700; letter-spacing: .08em; font-size: 15px; }
+.ask { margin: 0 0 14px; font-size: 17px; font-weight: 700; text-wrap: balance; }
+.namebox { width: min(100%, 340px); display: flex; flex-direction: column; gap: 14px; }
+.namebox input {
+  width: 100%; height: 54px; padding: 0 16px; text-align: center;
+  font: inherit; font-size: 18px; font-weight: 700; color: var(--ink);
+  background: rgba(255,255,255,.07); border: 1.5px solid rgba(255,196,225,.45); border-radius: 12px;
+}
+.namebox input::placeholder { color: rgba(246,242,248,.4); font-weight: 400; }
+.namebox input:focus-visible, .btn:focus-visible, .envelope:focus-visible, .link:focus-visible { outline: 3px solid var(--pink-soft); outline-offset: 3px; }
+.btn {
+  height: 54px; border: 0; border-radius: 999px; cursor: pointer;
+  font: inherit; font-weight: 900; font-size: 17px; letter-spacing: .06em;
+  color: #fff; background: var(--pink); box-shadow: 0 0 26px rgba(255,46,151,.55);
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 28px; text-decoration: none;
+}
+.btn:active { transform: scale(.98); }
+.qlabel { margin: 0 0 10px; font-family: var(--font-en); letter-spacing: .2em; font-size: 12px; color: var(--pink); }
+.linkdim { color: var(--ink-dim); }
+.hint { margin: 0; min-height: 1.4em; font-size: 13px; color: var(--ink-dim); }
+.hint.err { color: var(--pink-soft); }
+.proto { position: fixed; left: 0; right: 0; bottom: max(10px, env(safe-area-inset-bottom, 0px)); text-align: center; z-index: 5; font-size: 12px; color: var(--ink-dim); pointer-events: none; }
+
+/* ---- 2. 紙飛行機 ---- */
+#flight { padding: 0; }
+#flightSvg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.flight-cap { position: absolute; left: 0; right: 0; bottom: max(14%, env(safe-area-inset-bottom, 0px)); margin: 0; font-weight: 700; letter-spacing: .1em; color: var(--pink-soft); animation: pulse 2.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .45; } }
+
+/* ---- 3. 封筒 ---- */
+.arrive-cap { margin: 0 0 30px; font-weight: 700; font-size: 17px; color: var(--pink-soft); letter-spacing: .06em; }
+.arrive-cap b { color: var(--ink); }
+.envelope {
+  position: relative; width: min(78vw, 310px); aspect-ratio: 310 / 210; padding: 0; border: 0; background: none; cursor: pointer;
+  perspective: 900px; animation: drop 1.4s cubic-bezier(.2,.9,.3,1) both, sway 3.6s ease-in-out 1.4s infinite;
+  filter: drop-shadow(0 18px 34px rgba(255,46,151,.45));
+}
+@keyframes drop { from { opacity: 0; transform: translateY(-70vh) rotate(-14deg); } 60% { opacity: 1; transform: translateY(12px) rotate(3deg); } to { transform: none; } }
+@keyframes sway { 50% { transform: rotate(-2deg) translateY(-6px); } }
+.env-back { position: absolute; inset: 0; background: #e8d9c8; border-radius: 6px; }
+.env-card { position: absolute; left: 7%; right: 7%; top: 8%; bottom: 10%; background: var(--paper); border-radius: 3px; transition: transform .8s .35s cubic-bezier(.3,.8,.3,1); }
+.env-front { position: absolute; inset: 0; background: var(--paper); border-radius: 6px; clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%); background: linear-gradient(160deg, #fff7ee, #efdfcd); }
+.env-flap { position: absolute; left: 0; right: 0; top: 0; height: 56%; background: linear-gradient(180deg, #f6e9da, #e3d0bb); clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top center; transition: transform .7s ease; backface-visibility: hidden; }
+.env-seal { position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; background: var(--pink); box-shadow: 0 0 18px rgba(255,46,151,.8), inset 0 -3px 0 rgba(0,0,0,.18); display: grid; place-items: center; color: #fff; font-family: var(--font-en); font-weight: 600; font-size: 13px; transition: opacity .3s; z-index: 3; }
+.env-to { position: absolute; left: 0; right: 0; bottom: 11%; text-align: center; font-family: var(--font-hand); color: var(--paper-ink); font-size: 18px; z-index: 2; }
+.envelope.open .env-flap { transform: rotateX(180deg); }
+.envelope.open .env-seal { opacity: 0; }
+.envelope.open .env-card { transform: translateY(-34%); }
+.tap { margin: 28px 0 0; font-size: 14px; color: var(--ink-dim); letter-spacing: .12em; animation: pulse 2s ease-in-out infinite; }
+
+/* ---- 4. 手紙 ---- */
+#letterScreen { justify-content: flex-start; overflow-y: auto; padding-top: max(28px, env(safe-area-inset-top, 0px)); -webkit-overflow-scrolling: touch; }
+.letter {
+  width: min(100%, 420px); margin: auto; background: var(--paper); color: var(--paper-ink);
+  border-radius: 6px; padding: 34px 26px 28px; text-align: left; position: relative;
+  box-shadow: 0 24px 60px rgba(0,0,0,.55), 0 0 40px rgba(255,46,151,.28);
+  background-image: repeating-linear-gradient(180deg, transparent 0 31px, rgba(255,46,151,.11) 31px 32px);
+  animation: rise 1s cubic-bezier(.2,.8,.2,1) both;
+}
+@keyframes rise { from { opacity: 0; transform: translateY(40px) scale(.96); } to { opacity: 1; transform: none; } }
+.letter::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: var(--pink); border-radius: 6px 6px 0 0; }
+.letter__to { font-family: var(--font-hand); font-size: 24px; margin: 0 0 14px; line-height: 1.5; }
+.letter__body { font-family: var(--font-hand); font-size: 17.5px; line-height: 2; margin: 0 0 12px; word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
+.letter__from { font-family: var(--font-hand); font-size: 18px; text-align: right; margin: 16px 0 22px; }
+.event { border-top: 1.5px dashed rgba(43,34,48,.35); padding-top: 18px; display: flex; flex-direction: column; gap: 4px; }
+.event__name { font-family: var(--font-en); font-weight: 600; font-size: 22px; letter-spacing: .02em; margin: 0; color: var(--paper-ink); }
+.event__sub { margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #c4156f; letter-spacing: .06em; }
+.event dl { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 14px; font-size: 14px; }
+.event dt { font-weight: 700; color: #7b6a82; }
+.event dd { margin: 0; font-weight: 500; }
+.go { margin-top: 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.go .btn { width: 100%; }
+.link { background: none; border: 0; font: inherit; font-size: 13px; color: #7b6a82; text-decoration: underline; cursor: pointer; padding: 6px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fade, .letter, .envelope, .flight-cap, .tap { animation-duration: .01s; animation-iteration-count: 1; }
+  .env-card, .env-flap { transition-duration: .01s; }
+}
+</style>
+</head>
+<body>
+<div id="sky" aria-hidden="true"><canvas id="stars"></canvas></div>
+
+<!-- 1. 名前入力 -->
+<main class="screen" id="entry">
+  <div class="fade">
+    <p class="eyebrow">Invitation</p>
+    <h1 class="title">UNMUTE to ACTION</h1>
+    <p class="sub">〜その声で次をつくれ〜</p>
+    <div id="stepName">
+      <p class="ask">あなた宛ての手紙を預かっています。<br>ニックネームを<br>教えてください。</p>
+      <form class="namebox" id="nameForm" autocomplete="off">
+        <input id="nameInput" type="text" inputmode="text" enterkeyhint="next" placeholder="ニックネーム" aria-label="ニックネーム" maxlength="30">
+        <button class="btn" type="submit">次へ</button>
+        <p class="hint" id="hint" role="status"></p>
+      </form>
+    </div>
+    <div id="stepQ" hidden>
+      <p class="qlabel" id="qWho"></p>
+      <p class="ask" id="qText"></p>
+      <form class="namebox" id="qForm" autocomplete="off">
+        <input id="ansInput" type="text" enterkeyhint="go" placeholder="答え" aria-label="答え" maxlength="40">
+        <button class="btn" type="submit">手紙を受け取る</button>
+        <p class="hint" id="hint2" role="status"></p>
+        <button class="link linkdim" id="qBack" type="button">名前を入れ直す</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<!-- 2. 紙飛行機 -->
+<section class="screen" id="flight" hidden aria-live="polite">
+  <svg id="flightSvg" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="trailGrad" x1="0" x2="1">
+        <stop offset="0" stop-color="#ff2e97" stop-opacity="0"/>
+        <stop offset="1" stop-color="#ffc4e1" stop-opacity=".9"/>
+      </linearGradient>
+    </defs>
+    <path id="flightPath" d="M -50 690 C 90 640, 130 470, 210 480 C 300 490, 290 330, 450 90" fill="none" stroke="none"/>
+    <path id="trail" d="" fill="none" stroke="url(#trailGrad)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1 9"/>
+    <g id="plane">
+      <path d="M 26 0 L -18 -15 L -8 0 L -18 15 Z" fill="#fff"/>
+      <path d="M 26 0 L -8 0 L -18 15 Z" fill="#ffc4e1"/>
+      <path d="M -8 0 L -12 7 L -18 15" fill="none" stroke="#c4156f" stroke-width="1"/>
+    </g>
+  </svg>
+  <p class="flight-cap">手紙が飛んでいきます…</p>
+</section>
+
+<!-- 3. 封筒 -->
+<section class="screen" id="arrive" hidden>
+  <p class="arrive-cap"><b id="arriveName"></b>さんのもとに、手紙が届きました。</p>
+  <button class="envelope" id="envelope" type="button" aria-label="封筒を開ける">
+    <span class="env-back"></span>
+    <span class="env-card"></span>
+    <span class="env-front"></span>
+    <span class="env-flap"></span>
+    <span class="env-seal">NSJ</span>
+    <span class="env-to" id="envTo"></span>
+  </button>
+  <p class="tap">タップして開ける</p>
+</section>
+
+<!-- 4. 手紙 -->
+<section class="screen" id="letterScreen" hidden>
+  <article class="letter" id="letter">
+    <p class="letter__to" id="lTo"></p>
+    <div id="lBody"></div>
+    <p class="letter__from" id="lFrom"></p>
+    <div class="event">
+      <p class="event__name">UNMUTE to ACTION</p>
+      <p class="event__sub">〜その声で次をつくれ〜</p>
+      <dl>
+        <dt>日時</dt><dd>2026年12月上旬(決まり次第お知らせ)</dd>
+        <dt>会場</dt><dd>APU J101教室(予定)</dd>
+        <dt>主催</dt><dd>NEXT SPARK JAPAN 森山慎太郎</dd>
+      </dl>
+    </div>
+    <div class="go">
+      <a class="btn" id="goBtn" href="https://shintaroyade.github.io/apu-event/" target="_blank" rel="noopener">イベントのサイトを見る ›</a>
+      <button class="link" id="again" type="button">最初に戻る</button>
+    </div>
+  </article>
+</section>
+
+<p class="proto" id="proto" hidden></p>
+
+<script>
+/* =====================================================================
+ * 設定:ここだけ書き換えれば、友人ごとの手紙を増やせます。
+ *  names … 入力されたらこの手紙を出す名前(ひらがな・カタカナ・漢字・ローマ字、複数OK)
+ *  to    … 宛名   body … 本文(配列。1要素=1段落。「\n」で改行)
+ *  名前とパスワードの両方が合わないときは、手紙を出しません。
+ * ===================================================================== */
+const SITE_URL = "https://shintaroyade.github.io/apu-event/";
+const SHOW_PROTO_HINT = false;
+const FROM = "しんたろう より";
+/* 名前を入れた人に、その人専用の質問(q)を出し、答え(a のどれか)が合った人にだけ手紙を出します。
+ * names … 入力できる名前(ひらがな・カタカナ・ローマ字、複数OK)  q … 質問  a … 正解(言い換えも複数OK。空のままだと開けません)  to … 宛名  body … 本文(1要素=1段落、「\n」で改行) */
+const LETTERS = [
+  {"names": ["あきら", "akira", "みゃんみゃん"], "to": "みゃんみゃんへ", "body": ["APUでこんなに面白いやつと出会えて幸せです！もっともっとおもろいことしよう！まだ見えてないあきらのやりたいももっと聴きたい！！！", "12月上旬に自分の今年一番の挑戦をします", "何かあきらのやりたいのきっかけになったら嬉しい！ぜひ遊びに来て"], "q": "お互いを貶し合う時に使っている3文字のワードは?", "a": ["きたな"]},
+  {"names": ["いちか", "ichika"], "to": "いちかへ", "body": ["いつもみんなに笑顔で元気を与えている姿に尊敬してる！その反面、すごい真面目で自分の取り組みに一生懸命なのも素敵だよ！！", "12月上旬に自分の今年一番の挑戦をします", "何かいちかの力になれるものがあれば嬉しいです！ぜひ遊びに来て"], "q": "初めてヒッチハイクした時に乗せてくれた人の職業は?", "a": ["ホスト"]},
+  {"names": ["こうき", "koki", "kouki"], "to": "こうきへ", "body": ["同じ06APUにいることの安心感が最高です\nこうきはいつも自然と肯定してくれて、知的なところが嫉妬するくらい魅力です！", "12月上旬に自分の今年一番の挑戦をします", "こうきの何かいいきっかけを作れたら嬉しい！ぜひ遊びに来て"], "q": "最近こうきがハマっている3DSのゲームの名前は?", "a": ["妖怪ウォッチ", "ようかいウォッチ", "妖怪ウオッチ", "ようかいうおっち"]},
+  {"names": ["むくと", "mukuto", "むく", "muku"], "to": "むくへ", "body": ["むくとりゅうがいるからAPU生活が楽しくて頑張れる最高の親友だと思っています\nいつもいい影響をありがとう", "むくのやりたいも形にしよう！もっと聴かせてほしい！！", "12月上旬に自分の今年一番の挑戦をします", "むくにいいきっかけを作れたら嬉しい！ぜひ遊びに来て"], "q": "俺がいつもむくのファッションで突っ込む部分は?", "a": ["靴下", "くつした", "くつ下"]},
+  {"names": ["ねね", "nene"], "to": "ねねへ", "body": ["クリエイティブで頑張り家なねねさん\n最近あんまり話せてないけど、まだまだねねのやりたいことが聴きたい！ねねの視点はほんとに面白いからすごく刺激になってる！", "12月上旬に自分の今年一番の挑戦をします", "ねねの気持ちを踊らせます！ぜひ遊びに来て"], "q": "大阪で遊んだ時に行った美術展は何?", "a": []},
+  {"names": ["りゅう", "ryu", "ryuu"], "to": "りゅうへ", "body": ["りゅうとむくがいるからAPUでの生活が最高に楽しい、最高の親友です\n最高の大学生活をありがとう！", "俺らのやりたいを形にしていこう！", "12月上旬に自分の今年一番の挑戦をします", "りゅうに何かいい影響があったら嬉しい！ぜひ遊びに来て"], "q": "最近探していたお菓子がヘルメットから出てきたね、どこのお菓子?", "a": []},
+  {"names": ["しほ", "shiho"], "to": "しほへ", "body": ["今回はしっかりインバイトさせていただくよ！笑\n普段あんまりみれることのないしほのしっかりしている一面がほんまに魅力的！", "12月上旬に自分の今年一番の挑戦をします", "しほの何かいいきっかけを作れたら嬉しい！ぜひ遊びに来て"], "q": "自分たちが初めて出会ったのは?", "a": ["プレエントランスデー", "プレエントランスデイ"]},
+  {"names": ["ぜあん", "zean", "ぜあんぬー"], "to": "ぜアンヌーへ", "body": ["ぜアンヌー下界暮らしは楽しんでいるかい？\n下界にいても、ぜあんのやりたいことはずっと聴きたいと思ってるよ！\nまた知的で面白いぜあんの話をたくさん聞かせてほしい！", "12月上旬に自分の今年一番の挑戦をします", "ぜあんにとっていいきっかけを作れたら嬉しい！ぜひ遊びに来て"], "q": "ぜあんの引越しの手伝いの後に行ったご飯屋さんの名前は?", "a": []},
+  {"names": ["けいた", "keita", "けいちゃん", "けいちゅん"], "to": "けいたへ", "body": ["けいちゃんはオープンキャンパスからの仲でこの縁が今も続いていることがすごく嬉しい！\n仲良くしてくれてありがとう！\nたまに聞かせてくれるけいちゅんの本気のやりたいことをまた聞かせてほしい！", "12月上旬に自分の今年一番の挑戦をします", "けいたにとって刺激のあるものにできてたら嬉しい！ぜひ遊びに来て"], "q": "出会った日のオープンキャンパスで受けたのは誰の授業?(カタカナ)", "a": ["イクニ"]},
+  {"names": ["まさと", "masato"], "to": "まさとへ", "body": ["まさとは個人的に出会ってから一番成長してるんじゃないかなって感じてる！！\nそんなまさとが将来やりたいこととかってあんまり聞いたことがないからよかったらぜひ聞かせてほしい！", "12月上旬に自分の今年一番の挑戦をします", "まさとにとっていいきっかけを作れたら嬉しい！ぜひ遊びに来て"], "q": "まさとが最近好意を寄せられている人はどこ出身?", "a": ["スペイン"]},
+  {"names": ["るり", "ruri"], "to": "るりへ", "body": ["るりと出会えて、毎日のAPU生活が本当に幸せです！\nるりの毎日頑張る姿を見て尊敬しながらも心配してます\nるりが毎日恐れるものなく毎日楽しい！って思ってもらえるように頑張りたい！", "るりの心からワクワクできることって何？\nまた聴かせてね", "12月上旬に自分の今年一番の挑戦をします", "るりのやりたいを引き出せたら嬉しい！ぜひ遊びに来て"], "q": "初めての深夜ドライブで行ったのはどこ?", "a": ["カフェ"]},
+  {"names": ["わかな", "wakana"], "to": "わかなへ", "body": ["なんだかんだあんまり話したことないね！\n同じアイセッカーとして毎日を頑張ろう！\nぜひわかなのやりたいこととかも聴いてみたい！", "12月上旬に自分の今年一番の挑戦をします", "わかなにとって何かいいきっかけを作れたら嬉しい！ぜひ遊びに来て"], "q": "一時期だったむくとの口癖は?", "a": ["それはえぐい"]}
+];
+
+/* ---------- 名前の照合(ひらがな/カタカナ/大文字小文字/空白/「さん」を無視) ---------- */
+function normalize(s) {
+  return s.normalize("NFKC").toLowerCase()
+    .replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60))
+    .replace(/[\s　・.\-_]+/g, "")
+    .replace(/(さん|くん|ちゃん|様|さま)$/, "");
+}
+function findByName(raw) {
+  const n = normalize(raw);
+  return LETTERS.find(l => l.names.some(x => normalize(x) === n)) || null;
+}
+function normAns(s) {
+  return s.normalize("NFKC").toLowerCase()
+    .replace(/[\u30a1-\u30f6]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x60))
+    .replace(/[\s\u3000・.,、。!?「」『』~〜\-_]+/g, "");
+}
+function checkAnswer(letter, raw) {
+  const x = normAns(raw);
+  return !!x && letter.a.some(a => normAns(a) === x);
+}
+
+/* ---------- 星空 ---------- */
+(function stars() {
+  const cv = document.getElementById("stars"), ctx = cv.getContext("2d");
+  let W, H, pts = [];
+  function size() {
+    const d = Math.min(window.devicePixelRatio || 1, 2);
+    W = cv.clientWidth; H = cv.clientHeight; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+    pts = Array.from({ length: Math.round(W * H / 5200) }, () => ({ x: Math.random() * W, y: Math.random() * H, r: Math.random() * 1.3 + .3, p: Math.random() * 6.28, s: .6 + Math.random() * 1.4 }));
+  }
+  function draw(t) {
+    ctx.clearRect(0, 0, W, H);
+    pts.forEach(o => {
+      const a = .35 + .55 * (.5 + .5 * Math.sin(t / 1000 * o.s + o.p));
+      ctx.fillStyle = "rgba(255,236,246," + a.toFixed(2) + ")";
+      ctx.beginPath(); ctx.arc(o.x, o.y, o.r, 0, 6.283); ctx.fill();
+    });
+    if (!reduce) requestAnimationFrame(draw);
+  }
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  size(); addEventListener("resize", () => { size(); if (reduce) draw(0); });
+  draw(0);
+})();
+
+/* ---------- 画面の流れ ---------- */
+const $ = id => document.getElementById(id);
+const screens = ["entry", "flight", "arrive", "letterScreen"];
+function show(id) { screens.forEach(s => { $(s).hidden = s !== id; }); }
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let current = null, who = "";
+
+if (!SHOW_PROTO_HINT) $("proto").hidden = true;
+
+function say(el, msg, err) { el.textContent = msg; el.className = err ? "hint err" : "hint"; }
+$("nameForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const raw = $("nameInput").value.trim(), h = $("hint");
+  if (!raw) { say(h, "ニックネームを入力してください。", true); $("nameInput").focus(); return; }
+  const hit = findByName(raw);
+  if (!hit) { say(h, "その名前の手紙は見つかりませんでした。呼ばれているニックネームで入れてみてください。", true); $("nameInput").select(); return; }
+  current = hit; who = raw.replace(/(さん|くん|ちゃん)$/, "");
+  say(h, "", false);
+  $("qWho").textContent = "QUESTION";
+  $("qText").textContent = hit.q;
+  $("ansInput").value = ""; say($("hint2"), "", false);
+  $("stepName").hidden = true; $("stepQ").hidden = false;
+  $("ansInput").focus({ preventScroll: true });
+});
+$("qForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const h = $("hint2");
+  if (!$("ansInput").value.trim()) { say(h, "答えを入力してください。", true); $("ansInput").focus(); return; }
+  if (!checkAnswer(current, $("ansInput").value)) { say(h, "答えが違うようです。もう一度考えてみてください。", true); $("ansInput").select(); return; }
+  say(h, "", false);
+  $("proto").hidden = true;
+  startFlight();
+});
+$("qBack").addEventListener("click", () => {
+  $("stepQ").hidden = true; $("stepName").hidden = false; $("nameInput").focus({ preventScroll: true });
+});
+
+function startFlight() {
+  if (reduceMotion) { showEnvelope(); return; }
+  show("flight");
+  const path = $("flightPath"), trail = $("trail"), plane = $("plane");
+  const L = path.getTotalLength(), DUR = 4300, t0 = performance.now();
+  const ease = x => x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+  (function step(now) {
+    const k = Math.min((now - t0) / DUR, 1), len = ease(k) * L;
+    const p = path.getPointAtLength(len), q = path.getPointAtLength(Math.min(len + 2, L));
+    plane.setAttribute("transform", "translate(" + p.x + " " + p.y + ") rotate(" + (Math.atan2(q.y - p.y, q.x - p.x) * 180 / Math.PI) + ")");
+    const from = Math.max(0, len - 190);
+    const pts = []; for (let s = from; s <= len; s += 6) { const m = path.getPointAtLength(s); pts.push((pts.length ? "L" : "M") + m.x.toFixed(1) + " " + m.y.toFixed(1)); }
+    trail.setAttribute("d", pts.join(" "));
+    if (k < 1) requestAnimationFrame(step); else setTimeout(showEnvelope, 250);
+  })(t0);
+}
+
+function showEnvelope() {
+  $("arriveName").textContent = who;
+  $("envTo").textContent = current.to;
+  const env = $("envelope"); env.classList.remove("open");
+  show("arrive");
+  env.focus({ preventScroll: true });
+}
+
+$("envelope").addEventListener("click", () => {
+  const env = $("envelope");
+  if (env.classList.contains("open")) return;
+  env.classList.add("open");
+  setTimeout(showLetter, reduceMotion ? 50 : 1250);
+});
+
+function showLetter() {
+  $("lTo").textContent = current.to;
+  const box = $("lBody"); box.textContent = "";
+  current.body.forEach(t => {
+    const p = document.createElement("p"); p.className = "letter__body";
+    t.split("\n").forEach((line, i) => { if (i) p.appendChild(document.createElement("br")); p.appendChild(document.createTextNode(line)); });
+    box.appendChild(p);
+  });
+  $("lFrom").textContent = FROM;
+  $("goBtn").href = SITE_URL;
+  show("letterScreen");
+  $("letterScreen").scrollTop = 0;
+}
+
+$("again").addEventListener("click", () => {
+  $("nameInput").value = ""; $("ansInput").value = ""; say($("hint"), "", false); $("stepQ").hidden = true; $("stepName").hidden = false;
+  if (SHOW_PROTO_HINT) $("proto").hidden = false;
+  show("entry");
+  $("nameInput").focus({ preventScroll: true });
+});
+</script>
+</body>
+</html>
